@@ -1,58 +1,33 @@
-import { useState } from 'react'
+import {BrowserRouter, Routes, Route, useParams} from 'react-router-dom'
+
 import './TodoApp.css'
+
+import WelcomeComponent from './WelcomeComponent'
+import { ErrorComponent } from './ErrorComponent'
+import { LogoutComponent } from './LogoutComponent'
+import { HeaderComponent } from './HeaderComponent'
+import { ListTodosComponent } from './ListTodosComponent'
+import { LoginComponent } from './LoginComponent'
+import AuthProvider from './security/AuthProvider'
+
 
 export default function TodoApp() {
     return (
         <div className="TodoApp">
-            Todo MGMT app
-            <LoginComponent/>
-        </div>
-    )
-}
-
-function LoginComponent() {
-
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false)
-    const [showErrorMessage, setShowErrorMessage] = useState(false)
-    
-
-    function handleUsernameChange(event) {
-        setUsername(event.target.value)
-    }
-    
-    function hanldePasswordChange(event) {
-        setPassword(event.target.value)
-    }
-
-    function handleSubmit() {
-        if(username === 'iratherfear') {
-            setShowSuccessMessage(true)
-            setShowErrorMessage(false)
-        } else {
-            setShowSuccessMessage(false)
-            setShowErrorMessage(true)
-        }
-    }
-
-    return (
-        <div className="Login">
-            {showSuccessMessage && <div className="ShowSuccess">Authentication Successful</div>}
-            {showErrorMessage && <div className="ShowSuccess">Authentication Failed</div>}
-
-            <div className="LoginForm">
-                <div>
-                    <input type="text" name="username" placeholder="username" value={username} onChange={handleUsernameChange}/>
-                </div>
-                <div>
-                    <input type="password" name="password" placeholder="password" value={password} onChange={hanldePasswordChange}/>
-                </div>
-                <div>
-                    <button type="button" name="login" onClick={handleSubmit}>LOGIN</button>
-                </div>
-            </div>  
+            <AuthProvider>
+                <BrowserRouter>
+                    <HeaderComponent />
+                    <Routes>
+                        <Route path='/' element={< LoginComponent /> } />     
+                        <Route path='/login' element={< LoginComponent /> } />     
+                        <Route path='/welcome/:username' element={< WelcomeComponent /> } />     
+                        <Route path='/welcome/:username' element={< WelcomeComponent /> } />     
+                        <Route path='/todos' element = { < ListTodosComponent /> }/>
+                        <Route path='/logout' element = { < LogoutComponent /> }/>
+                        <Route path='*' element={< ErrorComponent /> } />     
+                    </Routes>
+                </BrowserRouter>
+            </AuthProvider>
         </div>
     )
 }
